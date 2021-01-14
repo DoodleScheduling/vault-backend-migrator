@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	commands "github.com/adamdecaf/vault-backend-migrator/cmd"
-	"github.com/adamdecaf/vault-backend-migrator/vault"
+	commands "github.com/DoodleScheduling/vault-backend-migrator/cmd"
+	"github.com/DoodleScheduling/vault-backend-migrator/vault"
 )
 
 var (

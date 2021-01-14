@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/adamdecaf/vault-backend-migrator/vault"
+	"github.com/DoodleScheduling/vault-backend-migrator/vault"
 )
 
 const (

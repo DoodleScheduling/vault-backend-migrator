@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/adamdecaf/vault-backend-migrator/cmd"
+	"github.com/DoodleScheduling/vault-backend-migrator/cmd"
 )
 
 var (

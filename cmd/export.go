@@ -53,7 +53,7 @@ func Export(path, file, metad, ver string) error {
 	for _, p := range all {
 		kvs := v.Read(p)
 		if kvs == nil {
-			fmt.Printf("invalid read on %s\n", p)
+			//fmt.Printf("invalid read on %s\n", p)
 			continue
 		}
 
@@ -98,8 +98,8 @@ func Export(path, file, metad, ver string) error {
 
 func accumulate(acc *[]string, v vault.Vault, basep string, accump string) {
 	res := v.List(basep)
+	*acc = append(*acc, accump)
 	if res == nil { // We ran into a leaf
-		*acc = append(*acc, accump)
 		return
 	}
 	for _, k := range res {

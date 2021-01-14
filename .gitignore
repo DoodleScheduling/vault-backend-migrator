@@ -1,3 +1,4 @@
 bin/*
 *.json
 vault-backend-migrator
+.idea

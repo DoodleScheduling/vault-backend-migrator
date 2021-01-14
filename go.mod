@@ -1,4 +1,4 @@
-module github.com/adamdecaf/vault-backend-migrator
+module github.com/DoodleScheduling/vault-backend-migrator
 
 go 1.14
 

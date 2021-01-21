@@ -7,11 +7,12 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"sync"
 
 	"github.com/DoodleScheduling/vault-backend-migrator/vault"
 )
 
-func Import(path, file, ver string) error {
+func Import(path, file, ver string, mergeImport bool) error {
 	abs, err := filepath.Abs(file)
 	if err != nil {
 		return err
@@ -48,17 +49,44 @@ func Import(path, file, ver string) error {
 		return errors.New("Unable to create vault client")
 	}
 
-	// Write each keypair to vault
-	for _, item := range wrap.Data {
-		data := make(map[string]string)
-		for _, kv := range item.Pairs {
-			data[kv.Key] = kv.Value
-		}
-		fmt.Printf("Writing %s\n", item.Path)
-		if err := v.Write(item.Path, data, ver); err != nil {
-			fmt.Printf("Error %s\n", err)
-		}
+  var wg sync.WaitGroup
+	concurent := 50
+	ch :=  make(chan Item, concurent)
+
+	for i := 0; i < concurent; i++ {
+			go func (){
+					for item := range ch {
+						data := make(map[string]string)
+
+						for _, kv := range item.Pairs {
+							data[kv.Key] = kv.Value
+						}
+
+						if mergeImport == true {
+							existing := v.Read(item.Path)
+							if existing != nil {
+								for k, v := range existing {
+									data[k] = v.(string)
+								}
+							}
+						}
+
+						fmt.Printf("Writing %s\n", item.Path)
+						if err := v.Write(item.Path, data, ver); err != nil {
+							fmt.Printf("Error %s\n", err)
+						}
+
+						wg.Done()
+					}
+			}()
 	}
 
+	// Write each keypair to vault
+	for _, item := range wrap.Data {
+		wg.Add(1)
+		ch <- item
+	}
+
+	wg.Wait()
 	return nil
 }

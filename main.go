@@ -13,6 +13,7 @@ var (
 	// Actions
 	ex = flag.String("export", "", "The vault path to export")
 	im = flag.String("import", "", "The vault path to import data into")
+	mi = flag.Bool("merge-import", false, "Do not overwrite existing fields while importing")
 	vr = flag.String("ver", "", "KV version")
 	md = flag.String("metadata", "", "Metadata path")
 
@@ -23,7 +24,7 @@ var (
 	version = flag.Bool("version", false, "Output the version number")
 )
 
-const Version = "0.2.1-dev"
+const Version = "0.2.2-dev"
 
 func main() {
 	flag.Parse()
@@ -33,7 +34,7 @@ func main() {
 		if empty(im, file) {
 			exit()
 		}
-		err := cmd.Import(*im, *file, *vr)
+		err := cmd.Import(*im, *file, *vr, *mi)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
